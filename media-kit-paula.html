@@ -191,6 +191,55 @@ section{padding:56px 0}
 .positioning em{color:var(--gold); font-style:italic}
 
 /* ===================================================================
+   4b. HERO NO MOBILE (até 767px)
+   Aqui a foto vira AVATAR REDONDO e o texto fica centralizado abaixo
+   dela. Vale só nesta faixa: de 768px pra cima a foto volta a ser o
+   recorte grande à esquerda, com o texto alinhado à esquerda.
+
+   O enquadramento do círculo é controlado por estas variáveis:
+     --avatar-size  diâmetro do círculo
+     --avatar-zoom  quanto a foto é ampliada dentro do círculo
+     --avatar-x/-y  posição da foto dentro do círculo (enquadra o rosto)
+   Os valores atuais recortam a cabeça + ombros deste PNG (a silhueta
+   dela começa em y=43 e a cabeça tem centro em x=500), deixando uma
+   folga de respiro acima do cabelo. Se trocar a foto, reajuste os 3 —
+   dá para testar ao vivo no console (F12):
+     document.documentElement.style.setProperty('--avatar-zoom','230%')
+   =================================================================== */
+@media (max-width:767px){
+  :root{--avatar-size:172px; --avatar-zoom:111%; --avatar-x:-3%; --avatar-y:4%}
+
+  .hero{text-align:center; padding:44px 0 56px}
+  .hero-inner{gap:24px; justify-items:center}
+
+  .hero-photo{
+    order:1;                                  /* avatar ACIMA do texto */
+    width:var(--avatar-size); height:var(--avatar-size);
+    border-radius:50%; overflow:hidden; position:relative;
+    transform:none; justify-self:center;
+    background:linear-gradient(150deg,#6B2130,#3A0F19);
+    border:1px solid rgba(244,237,227,.28);
+    box-shadow:0 0 0 6px rgba(217,122,52,.16), 0 0 0 7px rgba(217,122,52,.55),
+               0 18px 40px -18px rgba(0,0,0,.6);
+  }
+  .hero-photo img{
+    position:absolute; height:auto; max-width:none;
+    width:var(--avatar-zoom); left:var(--avatar-x); top:var(--avatar-y);
+  }
+
+  .hero-copy{order:2; padding-bottom:0}
+  .hero .divider{margin:24px auto}
+  .positioning{margin:0 auto}
+
+  /* Se a foto não for encontrada, o placeholder mantém o formato redondo */
+  .hero-photo.is-missing{
+    width:var(--avatar-size); height:var(--avatar-size);
+    aspect-ratio:auto; border-radius:50%; border-style:dashed;
+  }
+  .hero-photo.is-missing .photo-hint{font-size:.68rem; padding:14px}
+}
+
+/* ===================================================================
    5. NÚMEROS DE DESTAQUE
    =================================================================== */
 .stats{padding-top:46px}
@@ -390,7 +439,7 @@ footer .divider{margin:0 auto 20px}
   /* Header em duas colunas: foto à esquerda, texto à direita */
   :root{--photo-w:340px}
   .hero{padding:64px 0 0}
-  .hero-inner{grid-template-columns:var(--photo-col) 1fr; align-items:end; gap:0 40px}
+  .hero-inner{grid-template-columns:var(--photo-col) 1fr; align-items:end; gap:0 60px}
   /* No tablet a foto é menor (340px) e fica encostada na base do header,
      inteira — cortá-la aqui deixaria um vão vazio embaixo dela. */
   /* max-width:none deixa a foto TRANSBORDAR a coluna dela de propósito:
@@ -440,14 +489,14 @@ footer .divider{margin:0 auto 20px}
 @media (min-width:1200px){
   :root{--pad-x:40px}
   section{padding:104px 0}
-  :root{--photo-w:620px}
+  :root{--photo-w:500px}
   .hero{padding:84px 0 0}
   /* height:0 faz a foto NÃO contar na altura do header: ela alinha o topo
      com o .hero-copy, transborda para baixo e é cortada pelo
      overflow:hidden do .hero — o resto fica escondido atrás da seção de
      números. Quem define a altura do header é o texto, não a foto.
      Para mostrar MAIS da foto, aumente o padding-bottom do .hero-copy. */
-  .hero-inner{align-items:start; gap:0 40px}
+  .hero-inner{align-items:start; gap:0 60px}
   .hero-photo{height:0; align-self:start}
   .hero-copy{align-self:start; padding-bottom:110px}
   .stat-grid{grid-template-columns:repeat(4,1fr)}

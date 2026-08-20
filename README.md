@@ -36,21 +36,47 @@ Para usar outro nome ou formato, troque só o `src` (busque por `EDITÁVEL · FO
 
 | Variável      | O que faz                                    | Mobile | Tablet | Desktop |
 |---------------|----------------------------------------------|--------|--------|---------|
-| `--photo-w`   | largura da foto (altura acompanha)           | 300px  | 340px  | 620px   |
+| `--photo-w`   | largura da foto (altura acompanha)           | —      | 340px  | 500px   |
 | `--photo-col` | coluna reservada para a foto (768px pra cima) | — | 74% de `--photo-w` | idem |
 | `--photo-x`   | deslocamento horizontal (aceita negativo)    | 0      | 0      | 0       |
 | `--photo-y`   | deslocamento vertical (aceita negativo)      | 0      | 0      | 0       |
 
 **Como a foto se comporta em cada tamanho de tela:**
 
-- **Desktop (1200px+)** — a foto tem 620px, o topo dela alinha com o topo do texto e
+- **Desktop (1200px+)** — a foto tem 500px, o topo dela alinha com o topo do texto e
   ela **não estica o header**: quem manda na altura é o texto. O que sobra da foto
   para baixo fica escondido atrás da seção de números (o header tem `overflow:hidden`).
   Aumentar `--photo-w` deixa a foto maior sem aumentar o header — só muda onde ela é cortada.
   Para mostrar **mais** da foto, aumente o `padding-bottom` da regra `.hero-copy`.
 - **Tablet (768–1199px)** — a foto tem 340px e fica encostada na base do header, inteira,
   sem corte (nesse tamanho o corte deixaria um vão vazio embaixo dela).
-- **Mobile** — a foto aparece abaixo do texto, inteira, alinhada à esquerda.
+- **Mobile (até 767px)** — a foto vira um **avatar redondo** centralizado no topo, e todo
+  o texto do header fica **centralizado abaixo dele**. O recorte de corpo inteiro não
+  funciona bem em tela estreita, então essa faixa tem tratamento próprio (bloco
+  `4b. HERO NO MOBILE` no CSS). De 768px pra cima nada disso vale: volta o recorte
+  grande à esquerda com o texto alinhado à esquerda.
+
+**Enquadramento do avatar (mobile).** O círculo é uma janela sobre a foto, controlada
+por 4 variáveis dentro do bloco `@media (max-width:767px)`:
+
+| Variável        | O que faz                                       | Valor atual |
+|-----------------|-------------------------------------------------|-------------|
+| `--avatar-size` | diâmetro do círculo                             | 172px       |
+| `--avatar-zoom` | quanto a foto é ampliada dentro do círculo      | 205%        |
+| `--avatar-x`    | posição horizontal da foto dentro do círculo    | -46%        |
+| `--avatar-y`    | posição vertical (maior = desce, dá mais respiro acima do cabelo) | 4% |
+
+Os valores atuais enquadram cabeça e ombros **desta** foto (a silhueta começa em
+y=43 e a cabeça tem centro em x=500 do PNG). **Se trocar a foto, reajuste os três
+últimos** — dá para testar ao vivo no console:
+
+```js
+document.documentElement.style.setProperty('--avatar-zoom','230%')
+```
+
+**Distância entre foto e texto (768px+).** É o `column-gap` da regra `.hero-inner`,
+hoje em 60px nos dois breakpoints. Ele soma com a folga que já vem da coluna
+reservada: no desktop o texto começa 44px depois do ombro dela.
 
 Para testar valores ao vivo, abra o console do navegador (F12) e rode:
 
